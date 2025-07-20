@@ -61,6 +61,30 @@ Then restart overleaf web service
 systemctl restart overleaf-web
 ```
 
+## TeX Live Packages
+Overleaf uses Tex Live behind the scenes and installs some commong pacakages by default. To install additional pacakages, you can use `tlmgr` at commandline.
+
+Here are some useful commands.
+
+| Command                                   | Description                                |
+|-------------------------------------------|--------------------------------------------|
+| `tlmgr list --only-installed`             | List installed packages                    |
+| `tlmgr list --only-remote`                | List remote packages that can be installed |
+| `tlmgr search --global --file <package>`  | Search for a package                       |
+| `tlmgr install xcolor`                    | Install **xcolor** package                 |
+
+For a full list of packages, please refer to CTAN at: https://ctan.org/pkg
+
+### Update Tex Live Packages
+
+| Command                | Description               |
+|------------------------|---------------------------|
+| `tlmgr update --list`  | List available updates    |
+| `tlmgr update --all`   | Update all packages       |
+
+For more information on using tlmgr, please refer to official documentation at: https://www.tug.org/texlive/doc/tlmgr.html
+
+
 ## Troubleshooting
 Log files for all Overleaf systemd services are located at `/var/log/overleaf/`
 
