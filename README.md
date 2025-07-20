@@ -22,15 +22,13 @@ apt update && apt install -y curl
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fauky/overleaf-lxc/main/overleaf-lxc.sh)"
 ```
 
-## Reverse Proxy Setup
-Simply point your reverse proxy to this endpoint: http://192.168.x.x:80
-
-Replace **192.168.x.x** with the actual IP address of your LXC container.
-
 ## Account Setup
 There is no default overleaf account created during installation. Create your first account at http://192.168.x.x/launchpad
 
 ## Customization
+
+Take a look at all the environmental variables at overleaf docs at: https://docs.overleaf.com/on-premises/configuration/overleaf-toolkit/environment-variables
+
 Add/modify environmental variables in `/etc/overleaf/env.sh` to customize your installation to suit your needs.
 
 Restart systemd services after modifying environmental variables.
@@ -42,6 +40,25 @@ systemctl restart overleaf-*
 Check status of systemd services
 ```
 systemctl status overleaf-*
+```
+
+## Reverse Proxy Setup
+Simply point your reverse proxy to this endpoint: http://192.168.x.x:80
+
+Replace **192.168.x.x** with the actual IP address of your LXC container.
+
+To make Overleaf aware of reverse proxy, add the following variables to `/etc/overleaf/env.sh`
+
+```
+OVERLEAF_SITE_URL=https://leaf.your-domain.com/
+OVERLEAF_BEHIND_PROXY=true
+OVERLEAF_SECURE_COOKIE=true
+```
+
+Then restart overleaf web service
+
+```
+systemctl restart overleaf-web
 ```
 
 ## Troubleshooting
