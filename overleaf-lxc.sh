@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-TEXLIVE_MIRROR="https://mirror.ox.ac.uk/sites/ctan.org/systems/texlive/tlnet"
+TEXLIVE_MIRROR="https://ctan.math.illinois.edu/systems/texlive/tlnet"
 
 OVERLEAF_DIR="/overleaf"
 
@@ -49,6 +49,7 @@ install_node_js() {
   apt update && apt install -y nodejs
 }
 
+# Install MongoDB
 install_mongo_db() {
   echo "Installing MongoDB..."
   curl -fsSL https://pgp.mongodb.com/server-8.0.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/mongodb-server-8.0.gpg
@@ -57,15 +58,18 @@ install_mongo_db() {
 
   # add replica set
   echo -e "\nreplication:\n  replSetName: overleaf" >> /etc/mongod.conf
-  systemctl restart mongod
+
+  # Enable MongoDB
+  systemctl enable --now mongod.service
 
   # Wait a few seconds to ensure MongoDB has restarted
   sleep 3
 
-  # initialize replica set
+  # Initialize replica set
   mongosh --eval "rs.initiate()"
 }
 
+# Install TeX Live
 install_texlive() {
   echo "Installing TeX Live..."
   mkdir -p "/tmp/texlive" && cd "/tmp/texlive"
@@ -108,6 +112,7 @@ EOF
   rm -rf /tmp/texlive
 }
 
+# Install Overleaf
 install_overleaf() {
   echo "Installaing Overleaf Community Edition..."
   echo "Creating Overleaf directories and user..."
@@ -215,8 +220,8 @@ export OVERLEAF_MONGO_URL=mongodb://localhost/sharelatex
 export OVERLEAF_REDIS_HOST=localhost
 export REDIS_HOST=localhost
 export ENABLED_LINKED_FILE_TYPES='project_file,project_output_file'
-export ENABLE_CONVERSIONS='true'
-export EMAIL_CONFIRMATION_DISABLED='true'
+export ENABLE_CONVERSIONS=true
+export EMAIL_CONFIRMATION_DISABLED=true
 EOF
 
   # Install npm dependencies and build assets
